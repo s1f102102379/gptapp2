@@ -9,13 +9,20 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
 from .local_settings import *
 from pathlib import Path
+import os
+import platform
+import openai
+import pytesseract
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+if platform.system() == 'Windows':
+    TESSERACT_CMD = os.path.join(BASE_DIR, 'Tesseract-OCR', 'tesseract.exe')
+else:
+    TESSERACT_CMD = '/usr/bin/tesseract'
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,7 +33,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','18.180.103.254','ec2-18-180-103-254.a
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,9 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gptapp',
+    'corsheaders',
+    "betterforms",  # 追加
 ]
-
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -46,13 +54,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'config.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,9 +119,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+OPENAI_API_KEY = 'YyJx5cO36OlfXnnGP0GmGGHNArOKEllFISeit5mRE3d0Fq9vxqtiOW9jnN9VKn8UWIMMYUxXmOdnX7X3uMFLqnA'
+openai.api_base = 'https://api.openai.iniad.org/api/v1'
+# settings.py
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+# ... 他の設定 ...
+CORS_ALLOW_ALL_ORIGINS = True
