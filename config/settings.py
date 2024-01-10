@@ -71,7 +71,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi'
+WSGI_APPLICATION = 'gptapp2.config.wsgi.application'
+
 
 
 # Database
