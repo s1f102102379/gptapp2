@@ -16,6 +16,6 @@ from django.core.wsgi import get_wsgi_application
 sys.path.append('/home/ec2-user/Django/gptapp2/config')
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-sys.path.append('/home/ec2-user/Django/env/lib/python3.9/site-packages')
+sys.path.append('/home/ec2-user/Django/env/lib/python3.11/site-packages')
 
 application = get_wsgi_application()
